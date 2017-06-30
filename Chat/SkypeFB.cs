@@ -62,14 +62,16 @@ namespace Chat
                     List<string> inviteeList = new List<string>();
                     Datos datos = new Datos("C:\\Users\\Administrator\\Desktop\\datos.xlsx");
                     inviteeList = datos.getUsuarios();
-            
+
                     //Se crea la conversación
                     conversation = lyncClient.ConversationManager.AddConversation();
                     //Se añaden los contactos a la conversación
                     inviteeList.ForEach(delegate (String usuario)
                     {
-                        conversation.AddParticipant(lyncClient.ContactManager.GetContactByUri(usuario));
+                        //conversation.AddParticipant(lyncClient.ContactManager.GetContactByUri("sip:"+usuario));
                     });
+                    conversation.AddParticipant(lyncClient.ContactManager.GetContactByUri("sip:david.penagos@accenture.com"));
+                    //conversation.AddParticipant(lyncClient.ContactManager.BeginAddGroup("sip:404",null,null));
                     
 
                     //Objeto encargado de enviar los mensajes
@@ -99,6 +101,7 @@ namespace Chat
                 //Enviar el mensaje
                 imModality.BeginSendMessage(mensaje, null, null);
                 retorno = true;
+                
             }catch(Exception e)
             {
                 retorno = false;

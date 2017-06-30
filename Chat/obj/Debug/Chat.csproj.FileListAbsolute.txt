@@ -27,3 +27,4 @@ C:\Users\Administrator\Documents\robot1\Chat\obj\Debug\Chat.csproj.GenerateResou
 C:\Users\Administrator\Documents\robot1\Chat\obj\Debug\Chat.exe
 C:\Users\Administrator\Documents\robot1\Chat\obj\Debug\Chat.pdb
 C:\Users\Administrator\Documents\robot1\Chat\obj\Debug\Chat.PruebaSkypeFb.resources
+C:\Users\Administrator\Documents\robot1\Chat\obj\Debug\Chat.csproj.ResolveComReference.cache

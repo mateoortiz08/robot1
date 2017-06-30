@@ -13,121 +13,85 @@ using Microsoft.Lync.Model.Extensibility;
 
 namespace Chat
 {
+	
+
 	public partial class Configuracion : Form
 	{
-		LyncClient lyncClient;
-		Automation automation;
-		ContactManager contactMgr;
-		List<SearchProviders> activeSearchProviders;
-		ContactSubscription searchResultSubscription;
+		
+
+		private System.Threading.Timer timer;
+
+		SkypeFB skype;
 
 		public Configuracion()
 		{
 			InitializeComponent();
+			skype = new SkypeFB();
+			
+		}
 
-			try
+
+		
+		
+
+		public void TiempoAvizo1(TimeSpan alertTime,String dato,int condicional)
+		{
+			DateTime current = DateTime.Now;
+			TimeSpan timeToGo = alertTime - current.TimeOfDay;
+			if (timeToGo < TimeSpan.Zero)
 			{
-
-
-				//Obtener instancias de Lync Client y Contact Manager.
-				lyncClient = LyncClient.GetClient();
-				automation = LyncClient.GetAutomation();
-				contactMgr = lyncClient.ContactManager;
-
-				activeSearchProviders = new List<SearchProviders>();
-				searchResultSubscription = contactMgr.CreateSubscription();
-
-				// Carga Proveedor de búsqueda experto si está configurado y habilita la casilla de verificación.
-				if (contactMgr.GetSearchProviderStatus(SearchProviders.Expert)
-							  == SearchProviderStatusType.SyncSucceeded || contactMgr.GetSearchProviderStatus(SearchProviders.Expert)
-							  == SearchProviderStatusType.SyncSucceededForExternalOnly || contactMgr.GetSearchProviderStatus(SearchProviders.Expert)
-							  == SearchProviderStatusType.SyncSucceededForInternalOnly)
+				return;//time already passed
+			}
+			this.timer = new System.Threading.Timer(x =>
+			{
+				switch (condicional)
 				{
-					activeSearchProviders.Add(SearchProviders.Expert);
+					
+					case 1:
+						skype.iniciarChat();
+						skype.enviarMensaje(dato);
+						break;
+					case 2:
+						skype.enviarMensaje(dato);
+						skype.terminarChat();
+						break;
+					
+				}
+
+
+				
+			}, null, timeToGo, Timeout.InfiniteTimeSpan);
+		}
+
+		public void alertas(TimeSpan alertTime, int condicional)
+		{
+			DateTime current = DateTime.Now;
+			TimeSpan timeToGo = alertTime - current.TimeOfDay;
+			if (timeToGo < TimeSpan.Zero)
+			{
+				return;//time already passed
+			}
+			this.timer = new System.Threading.Timer(x =>
+			{
+				switch (condicional)
+				{
+					case 1:
+						AvizarComienzo();
+						break;
+					case 2:
+						AvizarCierre();
+						break;
+					
 
 				}
 
-				// Registrarse para el evento SearchProviderStatusChanged
-				// by ContactManager.
-				//contactMgr.SearchProviderStateChanged += contactMgr_SearchProviderStateChanged;
-			}
-			catch (Exception ex)
-			{
-				MessageBox.Show("Error:    " + ex.Message);
-			}
-		}
 
-
-		private System.Threading.Timer timer;
-		public void SetUpTimer1(TimeSpan alertTime)
-		{
-			DateTime current = DateTime.Now;
-			TimeSpan timeToGo = alertTime - current.TimeOfDay;
-			if (timeToGo < TimeSpan.Zero)
-			{
-				return;//time already passed
-			}
-			this.timer = new System.Threading.Timer(x =>
-			{
-				this.EnviarMensajeBienvenida();
+				
 			}, null, timeToGo, Timeout.InfiniteTimeSpan);
 		}
 
-		public void SetUpTimer2(TimeSpan alertTime)
-		{
-			DateTime current = DateTime.Now;
-			TimeSpan timeToGo = alertTime - current.TimeOfDay;
-			if (timeToGo < TimeSpan.Zero)
-			{
-				return;//time already passed
-			}
-			this.timer = new System.Threading.Timer(x =>
-			{
-				this.EnviarMensajeDespedida();
-			}, null, timeToGo, Timeout.InfiniteTimeSpan);
-		}
 
-		public void SetUpTimer3(TimeSpan alertTime)
-		{
-			DateTime current = DateTime.Now;
-			TimeSpan timeToGo = alertTime - current.TimeOfDay;
-			if (timeToGo < TimeSpan.Zero)
-			{
-				return;//time already passed
-			}
-			this.timer = new System.Threading.Timer(x =>
-			{
-				this.EnviarMensajeAviso();
-			}, null, timeToGo, Timeout.InfiniteTimeSpan);
-		}
 
-		public void TiempoAvizo1(TimeSpan alertTime)
-		{
-			DateTime current = DateTime.Now;
-			TimeSpan timeToGo = alertTime - current.TimeOfDay;
-			if (timeToGo < TimeSpan.Zero)
-			{
-				return;//time already passed
-			}
-			this.timer = new System.Threading.Timer(x =>
-			{
-				this.AvizarComienzo();
-			}, null, timeToGo, Timeout.InfiniteTimeSpan);
-		}
-
-		public void TiempoAvizo2(TimeSpan alertTime)
-		{
-			DateTime current = DateTime.Now;
-			TimeSpan timeToGo = alertTime - current.TimeOfDay;
-			if (timeToGo < TimeSpan.Zero)
-			{
-				return;//time already passed
-			}
-			this.timer = new System.Threading.Timer(x =>
-			{
-				this.AvizarCierre();
-			}, null, timeToGo, Timeout.InfiniteTimeSpan);
-		}
 		public void AvizarComienzo()
 		{
 			MessageBox.Show("EN 2 MINUTOS SE INICIARA EL CHAT", "AVIZO");
@@ -141,145 +105,11 @@ namespace Chat
 
 
 
-		private void EnviarMensajeBienvenida()
-		{
-			List<string> inviteeList = new List<string>();
-
-			inviteeList.Add("sip:alex.agudelo@accenture.com");
-
-
-
-			// Create a generic Dictionary object to contain
-			// conversation setting objects.
-			Dictionary<AutomationModalitySettings, object> modalitySettings = new
-				Dictionary<AutomationModalitySettings, object>();
-			AutomationModalities chosenMode = AutomationModalities.InstantMessage;
-			string firstIMMessageText = textBox1.Text;
-
-			IAsyncResult ar = automation.BeginStartConversation(
-		  chosenMode
-		  , inviteeList
-		  , modalitySettings
-		  , null
-		  , null);
-
-			modalitySettings.Add(AutomationModalitySettings.FirstInstantMessage, firstIMMessageText);
-			modalitySettings.Add(AutomationModalitySettings.SendFirstInstantMessageImmediately,
-				true);
-			IAsyncResult er = automation.BeginStartConversation(
-		  chosenMode
-		  , inviteeList
-		  , modalitySettings
-		  , null
-		  , null);
-
-
-		}
-
-		private void EnviarMensajeDespedida()
-		{
-			List<string> inviteeList = new List<string>();
-
-			inviteeList.Add("sip:alex.agudelo@accenture.com");
-
-
-
-			// Create a generic Dictionary object to contain
-			// conversation setting objects.
-			Dictionary<AutomationModalitySettings, object> modalitySettings = new
-				Dictionary<AutomationModalitySettings, object>();
-			AutomationModalities chosenMode = AutomationModalities.InstantMessage;
-			string firstIMMessageText = textBox2.Text;
-
-			IAsyncResult ar = automation.BeginStartConversation(
-		  chosenMode
-		  , inviteeList
-		  , modalitySettings
-		  , null
-		  , null);
-
-			modalitySettings.Add(AutomationModalitySettings.FirstInstantMessage, firstIMMessageText);
-			modalitySettings.Add(AutomationModalitySettings.SendFirstInstantMessageImmediately,
-				true);
-			IAsyncResult er = automation.BeginStartConversation(
-		  chosenMode
-		  , inviteeList
-		  , modalitySettings
-		  , null
-		  , null);
-		}
-
-		private void EnviarMensajeAviso()
-		{
-			List<string> inviteeList = new List<string>();
-
-			inviteeList.Add("sip:alex.agudelo@accenture.com");
-
-
-
-			// Create a generic Dictionary object to contain
-			// conversation setting objects.
-			Dictionary<AutomationModalitySettings, object> modalitySettings = new
-				Dictionary<AutomationModalitySettings, object>();
-			AutomationModalities chosenMode = AutomationModalities.InstantMessage;
-			string firstIMMessageText = "En 5 minutos se cerrara el chat";
-
-			IAsyncResult ar = automation.BeginStartConversation(
-		  chosenMode
-		  , inviteeList
-		  , modalitySettings
-		  , null
-		  , null);
-
-			modalitySettings.Add(AutomationModalitySettings.FirstInstantMessage, firstIMMessageText);
-			modalitySettings.Add(AutomationModalitySettings.SendFirstInstantMessageImmediately,
-				true);
-			IAsyncResult er = automation.BeginStartConversation(
-		  chosenMode
-		  , inviteeList
-		  , modalitySettings
-		  , null
-		  , null);
-		}
-
-
+		
 		private void button1_Click(object sender, EventArgs e)
 		{
 
-			List<string> inviteeList = new List<string>();
-
-			inviteeList.Add("sip:david.penagos@accenture.com");
-
-			inviteeList.Add("sip:alex.agudelo@accenture.com");
-			inviteeList.Add("sip:cristhian.sanchez@accenture.com");
-
-
-
-			// Create a generic Dictionary object to contain
-			// conversation setting objects.
-			Dictionary<AutomationModalitySettings, object> modalitySettings = new
-				Dictionary<AutomationModalitySettings, object>();
-			AutomationModalities chosenMode = AutomationModalities.InstantMessage;
-			string firstIMMessageText = textBox1.Text;
-
-			IAsyncResult ar = automation.BeginStartConversation(
-		  chosenMode
-		  , inviteeList
-		  , modalitySettings
-		  , null
-		  , null);
-
-			modalitySettings.Add(AutomationModalitySettings.FirstInstantMessage, firstIMMessageText);
-			modalitySettings.Add(AutomationModalitySettings.SendFirstInstantMessageImmediately,
-				true);
-			IAsyncResult er = automation.BeginStartConversation(
-		  chosenMode
-		  , inviteeList
-		  , modalitySettings
-		  , null
-		  , null);
-
-
+			Obtener();
 
 		}
 
@@ -289,26 +119,65 @@ namespace Chat
 
 		}
 
-		private void Obtener()
+		public void Obtener()
 		{
 		    int hora1 = Convert.ToInt32(this.hora1.Text);
 			int seg1= Convert.ToInt32(this.seg1.Text);
 			int hora2 = Convert.ToInt32(this.hora2.Text);
 			int seg2 = Convert.ToInt32(this.seg2.Text);
 
-			if (seg1 == 0 && seg2 ==0) {
-				hora1 = hora1 - 1;
-				hora2 = hora2 - 1;
-				seg1 = 58;
-				seg2 = 58;
+			
+			
 
-				TiempoAvizo1(new TimeSpan(hora1, seg1, 00));
+			String bienvenida = textBox1.Text;
+			String despedida = textBox2.Text;
+
+			TiempoAvizo1(new TimeSpan(hora1, seg1, 00), textBox1.Text, 1);   //inicia chat
+			TiempoAvizo1(new TimeSpan(hora2, seg2, 00), textBox2.Text, 2);   //cierra chat 
+
+			
+			if (seg1 < 2 && seg2 < 2)
+			{
+
+				if (seg1 == 0 && seg2 == 0)
+				{
+					hora1 = hora1 - 1;
+					hora2 = hora2 - 1;
+					seg1 = 58;
+					seg2 = 58;
+
+
+					alertas(new TimeSpan(hora1, seg1, 00),  1);   //alerta inicial
+					alertas(new TimeSpan(hora2, seg2, 00),  2);     //alerta final
+
+
+				}
+				else
+				{
+
+					hora1 = hora1 - 1;
+					hora2 = hora2 - 1;
+					seg1 = 59;
+					seg2 = 59;
+
+					alertas(new TimeSpan(hora1, seg1, 00), 1);   //alerta inicial
+					alertas(new TimeSpan(hora2, seg2, 00), 2);      //alerta final
+
+				}
+
+			}
+			else
+			{
+				seg1 = seg1 - 2;
+				seg2 = seg2 - 2;
+				alertas(new TimeSpan(hora1, seg1, 00), 1);   //alerta inicial
+				alertas(new TimeSpan(hora2, seg2, 00), 2);      //alerta final
+
+
 
 			}
 
-			SetUpTimer3(new TimeSpan(hora1, seg1, 00));
 
-			TiempoAvizo1(new TimeSpan(10, 07, 00));
 
 		}
 
@@ -316,50 +185,15 @@ namespace Chat
 
 		private void button2_Click(object sender, EventArgs e)
 		{
-			string[] arr1 = new string[] {"cristhian.sanchez@accenture.com","alex.agudelo@accenture.com", "manuela.restrepo@accenture.com" };
+			
 
-			for (int i = 0; i < 3; i++)
-			{
-
-
-				List<string> inviteeList = new List<string>();
-
-				inviteeList.Add(arr1[i]);
-				// Create a generic Dictionary object to contain
-				// conversation setting objects.
-				Dictionary<AutomationModalitySettings, object> modalitySettings = new
-					Dictionary<AutomationModalitySettings, object>();
-				AutomationModalities chosenMode = AutomationModalities.InstantMessage;
-				string firstIMMessageText = textBox1.Text;
-
-				IAsyncResult ap = automation.BeginStartConversation(
-			  chosenMode
-			  , inviteeList
-			  , modalitySettings
-			  , null
-			  , null);
-
-				modalitySettings.Add(AutomationModalitySettings.FirstInstantMessage, firstIMMessageText);
-				modalitySettings.Add(AutomationModalitySettings.SendFirstInstantMessageImmediately,
-					true);
-				IAsyncResult ep = automation.BeginStartConversation(
-			  chosenMode
-			  , inviteeList
-			  , modalitySettings
-			  , null
-			  , null);
-
-
-			}
+			
 
 
 
 
 		}
 
-		private void numericUpDown2_ValueChanged(object sender, EventArgs e)
-		{
-
-		}
+		
 	}
 }

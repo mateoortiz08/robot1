@@ -152,7 +152,7 @@
 			this.seg1.Name = "seg1";
 			this.seg1.Size = new System.Drawing.Size(42, 20);
 			this.seg1.TabIndex = 11;
-			this.seg1.ValueChanged += new System.EventHandler(this.numericUpDown2_ValueChanged);
+			
 			// 
 			// hora2
 			// 

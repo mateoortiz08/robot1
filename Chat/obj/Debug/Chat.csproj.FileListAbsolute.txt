@@ -28,3 +28,19 @@ C:\Users\Administrator\Documents\robot1\Chat\obj\Debug\Chat.exe
 C:\Users\Administrator\Documents\robot1\Chat\obj\Debug\Chat.pdb
 C:\Users\Administrator\Documents\robot1\Chat\obj\Debug\Chat.PruebaSkypeFb.resources
 C:\Users\Administrator\Documents\robot1\Chat\obj\Debug\Chat.csproj.ResolveComReference.cache
+C:\Users\mateo.ortiz\Documents\nuevo robot\Chat\bin\Debug\Chat.exe.config
+C:\Users\mateo.ortiz\Documents\nuevo robot\Chat\bin\Debug\Chat.exe
+C:\Users\mateo.ortiz\Documents\nuevo robot\Chat\bin\Debug\Chat.pdb
+C:\Users\mateo.ortiz\Documents\nuevo robot\Chat\bin\Debug\Newtonsoft.Json.dll
+C:\Users\mateo.ortiz\Documents\nuevo robot\Chat\bin\Debug\Microsoft.Lync.Model.xml
+C:\Users\mateo.ortiz\Documents\nuevo robot\Chat\bin\Debug\Newtonsoft.Json.xml
+C:\Users\mateo.ortiz\Documents\nuevo robot\Chat\obj\Debug\Chat.csprojResolveAssemblyReference.cache
+C:\Users\mateo.ortiz\Documents\nuevo robot\Chat\obj\Debug\Chat.csproj.ResolveComReference.cache
+C:\Users\mateo.ortiz\Documents\nuevo robot\Chat\obj\Debug\Chat.Configuracion.resources
+C:\Users\mateo.ortiz\Documents\nuevo robot\Chat\obj\Debug\Chat.Form1.resources
+C:\Users\mateo.ortiz\Documents\nuevo robot\Chat\obj\Debug\Chat.login.resources
+C:\Users\mateo.ortiz\Documents\nuevo robot\Chat\obj\Debug\Chat.Properties.Resources.resources
+C:\Users\mateo.ortiz\Documents\nuevo robot\Chat\obj\Debug\Chat.PruebaSkypeFb.resources
+C:\Users\mateo.ortiz\Documents\nuevo robot\Chat\obj\Debug\Chat.csproj.GenerateResource.Cache
+C:\Users\mateo.ortiz\Documents\nuevo robot\Chat\obj\Debug\Chat.exe
+C:\Users\mateo.ortiz\Documents\nuevo robot\Chat\obj\Debug\Chat.pdb

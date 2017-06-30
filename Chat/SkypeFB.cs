@@ -60,7 +60,8 @@ namespace Chat
 
                     //Obtener lista de invitados
                     List<string> inviteeList = new List<string>();
-                    Datos datos = new Datos("C:\\Users\\Administrator\\Desktop\\datos.xlsx");
+					
+					 Datos datos = new Datos("C:\\Users\\mateo.ortiz\\Desktop\\datos.xlsx");
                     inviteeList = datos.getUsuarios();
 
                     //Se crea la conversación

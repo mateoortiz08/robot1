@@ -20,11 +20,7 @@ namespace Chat
 			
 
 			Configuracion conf = new Configuracion();
-			conf.TiempoAvizo1(new TimeSpan(10, 07, 00));         // alerta admin1
-			conf.TiempoAvizo2(new TimeSpan(10, 07, 15));         //alerta admin2
-			conf.SetUpTimer1(new TimeSpan(16, 41, 00));      //msg bienvenida
-		    conf.SetUpTimer3(new TimeSpan(16, 42, 00));      //msg avizo
-			conf.SetUpTimer2(new TimeSpan(16, 43, 00));      //msg despedida
+			conf.Obtener();
 
 		}
 

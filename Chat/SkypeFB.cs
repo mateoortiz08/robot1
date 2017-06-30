@@ -1,6 +1,7 @@
 ﻿using Microsoft.Lync.Model;
 using Microsoft.Lync.Model.Conversation;
 using Microsoft.Lync.Model.Extensibility;
+using Microsoft.Lync.Model.Group;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,10 +61,10 @@ namespace Chat
 
                     //Obtener lista de invitados
                     List<string> inviteeList = new List<string>();
-					
-					 Datos datos = new Datos("C:\\Users\\mateo.ortiz\\Desktop\\datos.xlsx");
+                    List<String> gruposList;
+					 Datos datos = new Datos("C:\\Users\\Administrator\\Desktop\\datos.xlsx");
                     inviteeList = datos.getUsuarios();
-
+                    gruposList = datos.getGrupos();
                     //Se crea la conversación
                     conversation = lyncClient.ConversationManager.AddConversation();
                     //Se añaden los contactos a la conversación
@@ -73,8 +74,26 @@ namespace Chat
                     });
                     //conversation.AddParticipant(lyncClient.ContactManager.GetContactByUri("sip:david.penagos@accenture.com"));
                     //conversation.AddParticipant(lyncClient.ContactManager.BeginAddGroup("sip:404",null,null));
-                    
 
+
+                    GroupCollection grupos = lyncClient.ContactManager.Groups;
+                    gruposList.ForEach(delegate (String strGrupo)
+                    {
+                        for (int i = 0; i < grupos.Count; i++)
+                        {
+                            Console.WriteLine(grupos[i].Name);
+                            if (grupos[i].Name.Equals(strGrupo)) 
+                            {
+                                for (int j = 0; j < grupos[i].Count; j++)
+                                {
+                                    String contacto = grupos[i].ElementAt(j).Uri;
+                                    conversation.AddParticipant(lyncClient.ContactManager.GetContactByUri(contacto));
+                                }
+                            }
+                        }
+                    });
+                    
+                    
                     //Objeto encargado de enviar los mensajes
                     imModality = conversation.Modalities[ModalityTypes.InstantMessage] as InstantMessageModality;
                  

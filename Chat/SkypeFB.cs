@@ -9,6 +9,11 @@ using System.Threading.Tasks;
 
 namespace Chat
 {
+    /*
+     *  Esta clase se encarga de conectarse con skype for business, y tiene las funciones de 
+     *  iniciar el chat, enviar un mensaje al chat y finalizar el chat
+     *  
+     * */
     class SkypeFB
     {
         LyncClient lyncClient;
@@ -40,33 +45,36 @@ namespace Chat
 
             }
 
-            // Registrarse para el evento SearchProviderStatusChanged
-            // by ContactManager.
-            //contactMgr.SearchProviderStateChanged += contactMgr_SearchProviderStateChanged;
 
         }
 
+        /*
+         * Retorna True si se puede iniciar el chat, de lo contrario false
+         * */
         public bool iniciarChat()
         {
             bool retorno = false;
             if (lyncClient!=null) {
                 try
                 {
+
+                    //Obtener lista de invitados
                     List<string> inviteeList = new List<string>();
-
-                    inviteeList.Add("sip:alex.agudelo@accenture.com");
-                    inviteeList.Add("sip:cristhian.sanchez@accenture.com");
-                    //inviteeList.Add("manuela.restrepo@accenture.com");
-
-
+                    Datos datos = new Datos("C:\\Users\\Administrator\\Desktop\\datos.xlsx");
+                    inviteeList = datos.getUsuarios();
+            
+                    //Se crea la conversación
                     conversation = lyncClient.ConversationManager.AddConversation();
-                    conversation.AddParticipant(lyncClient.ContactManager.GetContactByUri("sip:mateo.ortiz@accenture.com"));
-                    conversation.AddParticipant(lyncClient.ContactManager.GetContactByUri("sip:cristhian.sanchez@accenture.com"));
+                    //Se añaden los contactos a la conversación
+                    inviteeList.ForEach(delegate (String usuario)
+                    {
+                        conversation.AddParticipant(lyncClient.ContactManager.GetContactByUri(usuario));
+                    });
+                    
 
+                    //Objeto encargado de enviar los mensajes
                     imModality = conversation.Modalities[ModalityTypes.InstantMessage] as InstantMessageModality;
-                    //string message = "Funciono"; //use your existing notification logic here
-                    //imModality.BeginSendMessage(message, null, null);  
-
+                 
                     retorno = true;
                 }catch(Exception e)
                 {
@@ -80,11 +88,15 @@ namespace Chat
             return retorno;
         }
 
+        /*
+         * Retorna true si el mensaje es enviado con exito, de lo contrario false
+         * */
         public bool enviarMensaje(String mensaje)
         {
             bool retorno = false;
             try
             {
+                //Enviar el mensaje
                 imModality.BeginSendMessage(mensaje, null, null);
                 retorno = true;
             }catch(Exception e)

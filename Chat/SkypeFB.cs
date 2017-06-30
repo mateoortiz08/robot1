@@ -68,9 +68,9 @@ namespace Chat
                     //Se añaden los contactos a la conversación
                     inviteeList.ForEach(delegate (String usuario)
                     {
-                        //conversation.AddParticipant(lyncClient.ContactManager.GetContactByUri("sip:"+usuario));
+                        conversation.AddParticipant(lyncClient.ContactManager.GetContactByUri("sip:"+usuario));
                     });
-                    conversation.AddParticipant(lyncClient.ContactManager.GetContactByUri("sip:david.penagos@accenture.com"));
+                    //conversation.AddParticipant(lyncClient.ContactManager.GetContactByUri("sip:david.penagos@accenture.com"));
                     //conversation.AddParticipant(lyncClient.ContactManager.BeginAddGroup("sip:404",null,null));
                     
 

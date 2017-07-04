@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Lync.Model;
 using Microsoft.Lync.Model.Extensibility;
+using System.IO;
 
 namespace Chat
 {
@@ -18,16 +19,29 @@ namespace Chat
 	public partial class Configuracion : Form
 	{
 		
+		private static Configuracion myInstancia=null;
 
 		private System.Threading.Timer timer;
 
 		SkypeFB skype;
 
-		public Configuracion()
+
+		public static Configuracion getInstancia()
+		{
+			if (myInstancia == null)
+			{
+				myInstancia = new Configuracion();
+			}
+			return myInstancia;
+		}
+
+		private Configuracion()
 		{
 			InitializeComponent();
 			skype = new SkypeFB();
+			CargarDatos();
 			
+
 		}
 
 
@@ -108,7 +122,7 @@ namespace Chat
 		
 		private void button1_Click(object sender, EventArgs e)
 		{
-
+			guardarDatos();
 			Obtener();
 
 		}
@@ -179,6 +193,62 @@ namespace Chat
 
 
 
+		}
+
+		public void CargarDatos()
+		{
+
+			String line;
+			String[] array = new String[6];
+			int i = 0;
+
+			//Pass the file path and file name to the StreamReader constructor
+			StreamReader sr = new StreamReader("C:\\Users\\mateo.ortiz\\Desktop\\datos.txt");
+
+			//Read the first line of text
+			line = sr.ReadLine();
+
+			//Continue to read until you reach end of file
+			while (line != null)
+			{
+				//write the lie to console window
+				Console.WriteLine(line);
+				array[i] = line;
+				//Read the next line
+				line = sr.ReadLine();
+				i++;
+			}
+
+			//close the file
+			sr.Close();
+
+			hora1.Text = array[0];
+			seg1.Text = array[1];
+			hora2.Text = array[2];
+			seg2.Text = array[3];
+			textBox1.Text = array[4];
+			textBox2.Text = array[5];
+			
+
+
+
+		}
+
+		public void guardarDatos() {
+
+			StreamWriter sw = new StreamWriter("C:\\Users\\mateo.ortiz\\Desktop\\datos.txt");
+
+			//Write a line of text
+			sw.WriteLine(hora1.Text);
+			sw.WriteLine(seg1.Text);
+			sw.WriteLine(hora2.Text);
+			sw.WriteLine(seg2.Text);
+			sw.WriteLine(textBox1.Text);
+			sw.WriteLine(textBox2.Text);
+			
+
+			//Close the file
+			sw.Close();
 		}
 
 

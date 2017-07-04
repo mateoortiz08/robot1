@@ -16,11 +16,15 @@ namespace Chat
 		public Form1()
 		{
 			InitializeComponent();
+			Configuracion vista_confi = Configuracion.getInstancia();
+			vista_confi.Show();
+			vista_confi.Activate();
+			vista_confi.BringToFront();
 
-			
 
-			Configuracion conf = new Configuracion();
+			Configuracion conf = Configuracion.getInstancia();
 			conf.Obtener();
+			//conf.CargarDatos();
 
 		}
 
@@ -40,7 +44,7 @@ namespace Chat
 
 		private void Btn_Configuracion_Click(object sender, EventArgs e)
 		{
-			Configuracion vista_confi = new Configuracion();
+			Configuracion vista_confi =  Configuracion.getInstancia();
 			vista_confi.Show();
 			vista_confi.Activate();
 			vista_confi.BringToFront();

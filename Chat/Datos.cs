@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Excel = Microsoft.Office.Interop.Excel;
+using System.IO;
 
 namespace Chat
 {
@@ -71,6 +72,36 @@ namespace Chat
             return usuarios;
         }
 
+
+		public string[] leerTxt()
+		{
+			String line;
+			String[] array = new String[5];
+			int i=0;
+
+			//Pass the file path and file name to the StreamReader constructor
+			StreamReader sr = new StreamReader("C:\\Users\\mateo.ortiz\\Desktop\\datos.txt");
+
+			//Read the first line of text
+			line = sr.ReadLine();
+
+			//Continue to read until you reach end of file
+			while (line != null)
+			{
+				//write the lie to console window
+				Console.WriteLine(line);
+				array[i] = line;
+				//Read the next line
+				line = sr.ReadLine();
+				i++;
+			}
+
+			//close the file
+			sr.Close();
+
+			return array;
+
+		}
 
     }
 }

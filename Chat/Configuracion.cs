@@ -287,7 +287,7 @@ namespace Chat
 			int i = 0;
 
 			//Pass the file path and file name to the StreamReader constructor
-			StreamReader sr = new StreamReader("C:\\Users\\mateo.ortiz\\Desktop\\datos.txt");
+			StreamReader sr = new StreamReader("C:\\Users\\Administrator\\Desktop\\datos.txt");
 
 			//Read the first line of text
 			line = sr.ReadLine();
@@ -326,7 +326,7 @@ namespace Chat
 
 		public void guardarDatos() {
 
-			StreamWriter sw = new StreamWriter("C:\\Users\\mateo.ortiz\\Desktop\\datos.txt");
+			StreamWriter sw = new StreamWriter("C:\\Users\\Administrator\\Desktop\\datos.txt");
 
 			//Write a line of text
 			sw.WriteLine(hora1.Text);
@@ -345,7 +345,7 @@ namespace Chat
 
 		private void button2_Click(object sender, EventArgs e)
 		{
-			
+            skype.terminarChat();
 
 			
 

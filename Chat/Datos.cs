@@ -80,7 +80,7 @@ namespace Chat
 			int i=0;
 
 			//Pass the file path and file name to the StreamReader constructor
-			StreamReader sr = new StreamReader("C:\\Users\\mateo.ortiz\\Desktop\\datos.txt");
+			StreamReader sr = new StreamReader("C:\\Users\\Administrator\\Desktop\\datos.txt");
 
 			//Read the first line of text
 			line = sr.ReadLine();
@@ -102,6 +102,27 @@ namespace Chat
 			return array;
 
 		}
+
+        public static void guardar(String datos)
+        {
+            DateTime fecha = DateTime.Today;
+
+            String date = fecha.ToString().Replace('/', '-');
+            date = date.Replace(' ', '-');
+
+            
+            String ruta = "C:\\Users\\Administrator\\Desktop\\conversacion" + date + ".txt";
+
+            
+            Console.WriteLine(ruta);
+
+
+            //"C:\\Users\\Administrator\\Desktop\\conversacion" + fecha.ToString() + ".txt"
+            
+            StreamWriter sw = new StreamWriter("C:\\Users\\Administrator\\Desktop\\conversacion.txt");
+            sw.Write(datos);
+            sw.Close();
+        }
 
     }
 }

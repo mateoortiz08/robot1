@@ -24,6 +24,7 @@ namespace Chat
         ContactSubscription searchResultSubscription;
         Conversation conversation;
         InstantMessageModality imModality;
+        String mensajes = "";
 
         public SkypeFB()
         {
@@ -55,22 +56,25 @@ namespace Chat
         public bool iniciarChat()
         {
             bool retorno = false;
-            if (lyncClient!=null) {
+            if (lyncClient != null) {
                 try
                 {
 
                     //Obtener lista de invitados
                     List<string> inviteeList = new List<string>();
                     List<String> gruposList;
-					 Datos datos = new Datos("C:\\Users\\mateo.ortiz\\Desktop\\datos.xlsx");
+                    Datos datos = new Datos("C:\\Users\\Administrator\\Desktop\\datos.xlsx");
                     inviteeList = datos.getUsuarios();
                     gruposList = datos.getGrupos();
                     //Se crea la conversación
                     conversation = lyncClient.ConversationManager.AddConversation();
+
+                    conversation.ParticipantAdded += ParticipantAdded;
+
                     //Se añaden los contactos a la conversación
                     inviteeList.ForEach(delegate (String usuario)
                     {
-                        conversation.AddParticipant(lyncClient.ContactManager.GetContactByUri("sip:"+usuario));
+                        conversation.AddParticipant(lyncClient.ContactManager.GetContactByUri("sip:" + usuario));
                     });
                     //conversation.AddParticipant(lyncClient.ContactManager.GetContactByUri("sip:david.penagos@accenture.com"));
                     //conversation.AddParticipant(lyncClient.ContactManager.BeginAddGroup("sip:404",null,null));
@@ -82,7 +86,7 @@ namespace Chat
                         for (int i = 0; i < grupos.Count; i++)
                         {
                             Console.WriteLine(grupos[i].Name);
-                            if (grupos[i].Name.Equals(strGrupo)) 
+                            if (grupos[i].Name.Equals(strGrupo))
                             {
                                 for (int j = 0; j < grupos[i].Count; j++)
                                 {
@@ -92,13 +96,14 @@ namespace Chat
                             }
                         }
                     });
-                    
-                    
+
+
                     //Objeto encargado de enviar los mensajes
                     imModality = conversation.Modalities[ModalityTypes.InstantMessage] as InstantMessageModality;
-                 
+                   // imModality.InstantMessageReceived += InstantMessageReceived;
+
                     retorno = true;
-                }catch(Exception e)
+                } catch (Exception e)
                 {
                     retorno = false;
                 }
@@ -121,8 +126,8 @@ namespace Chat
                 //Enviar el mensaje
                 imModality.BeginSendMessage(mensaje, null, null);
                 retorno = true;
-                
-            }catch(Exception e)
+
+            } catch (Exception e)
             {
                 retorno = false;
             }
@@ -132,14 +137,44 @@ namespace Chat
 
         public void terminarChat()
         {
+            Console.WriteLine("Se cierra el chat");
             try
             {
+                
                 conversation.End();
-            }catch(Exception e)
+                Datos.guardar(this.getMensajes());
+            } catch (Exception e)
             {
-
+                Console.WriteLine(e.StackTrace);
             }
-            
+
         }
+
+        
+        private void InstantMessageReceived(object sender, MessageSentEventArgs e)
+        {
+            string user = (string)((InstantMessageModality)sender).Participant.Contact.GetContactInformation(ContactInformationType.DisplayName);
+            //Console.WriteLine(user);
+            //Console.WriteLine(e.Text);
+
+            mensajes += user + " : " + e.Text+"\n";
+
+
+        }
+
+        private void ParticipantAdded(object sender, ParticipantCollectionChangedEventArgs e)
+        {
+            
+
+            var instantMessageModality =
+                e.Participant.Modalities[ModalityTypes.InstantMessage] as InstantMessageModality;
+            instantMessageModality.InstantMessageReceived += InstantMessageReceived;
+        }
+
+        public String getMensajes()
+        {
+            return mensajes;
+        }
+        
     }
 }

@@ -39,8 +39,18 @@ namespace Chat
 		{
 			InitializeComponent();
 			skype = new SkypeFB();
+
 			CargarDatos();
-			
+
+			hora1.Maximum = 24;
+			hora1.Minimum = 0;
+			hora2.Maximum = 24;
+			hora2.Minimum = 0;
+			seg1.Maximum = 60;
+			seg1.Minimum = 0;
+			seg2.Maximum = 60;
+			seg2.Minimum = 0;
+
 
 		}
 
@@ -104,7 +114,19 @@ namespace Chat
 			}, null, timeToGo, Timeout.InfiniteTimeSpan);
 		}
 
-
+		public	 void EjecutarDiario(TimeSpan alertTime)
+		{
+			DateTime current = DateTime.Now;
+			TimeSpan timeToGo = alertTime - current.TimeOfDay;
+			if (timeToGo < TimeSpan.Zero)
+			{
+				return;//time already passed
+			}
+			this.timer = new System.Threading.Timer(x =>
+			{
+				this.dias();
+			}, null, timeToGo, Timeout.InfiniteTimeSpan);
+		}
 
 		public void AvizarComienzo()
 		{
@@ -122,8 +144,27 @@ namespace Chat
 		
 		private void button1_Click(object sender, EventArgs e)
 		{
-			guardarDatos();
-			Obtener();
+
+			if (hora1.Value > hora2.Value && textBox1.Text.Length == 0 && textBox2.Text.Length == 0)
+			{
+				MessageBox.Show("la hora final no puede ser menor a la inicial y Los campos de texto no pueden estar vacios");
+			}
+			 else if (hora1.Value > hora2.Value)
+			{
+				MessageBox.Show("la hora final no puede ser menor a la inicial ");
+			}
+			else if(textBox1.Text.Length == 0 && textBox2.Text.Length == 0)
+			{
+				MessageBox.Show("Los campos de texto no pueden estar vacios");
+			}			
+			else
+			{
+				guardarDatos();
+				Obtener();
+
+			}
+
+
 
 		}
 
@@ -133,21 +174,64 @@ namespace Chat
 
 		}
 
+		public void dias()
+		{
+
+			string day = DateTime.Now.DayOfWeek.ToString();
+			String bienvenida = textBox1.Text;
+			String despedida = textBox2.Text;
+
+			
+
+			switch (day)
+			{
+				case "lunes":
+					if (checkBox1.Checked == true) { Obtener(); }
+
+					break;
+				case "martes":
+					if (checkBox2.Checked == true) { Obtener(); }
+					
+					break;
+
+				case "miercoles":
+					if (checkBox3.Checked == true) { Obtener(); }
+					
+					break;
+				case "jueves":
+					if (checkBox4.Checked == true) { Obtener(); }
+
+					break;
+				case "viernes":
+					if (checkBox5.Checked == true) { Obtener(); }
+					
+					break;
+				default:
+					Console.WriteLine("Default case");
+					break;
+			}
+
+			
+
+
+		}
+
+
 		public void Obtener()
 		{
-		    int hora1 = Convert.ToInt32(this.hora1.Text);
+			
+
+			int hora1 = Convert.ToInt32(this.hora1.Text);
 			int seg1= Convert.ToInt32(this.seg1.Text);
 			int hora2 = Convert.ToInt32(this.hora2.Text);
 			int seg2 = Convert.ToInt32(this.seg2.Text);
 
 			
+
 			
 
-			String bienvenida = textBox1.Text;
-			String despedida = textBox2.Text;
-
-			TiempoAvizo1(new TimeSpan(hora1, seg1, 00), textBox1.Text, 1);   //inicia chat
-			TiempoAvizo1(new TimeSpan(hora2, seg2, 00), textBox2.Text, 2);   //cierra chat 
+			TiempoAvizo1(new TimeSpan(hora1, seg1, 00), textBox1.Text,1);   //inicia chat
+			TiempoAvizo1(new TimeSpan(hora2, seg2, 00), textBox2.Text,2);   //cierra chat 
 
 			
 			if (seg1 < 2 && seg2 < 2)
@@ -161,8 +245,8 @@ namespace Chat
 					seg2 = 58;
 
 
-					alertas(new TimeSpan(hora1, seg1, 00),  1);   //alerta inicial
-					alertas(new TimeSpan(hora2, seg2, 00),  2);     //alerta final
+					alertas(new TimeSpan(hora1, seg1, 00),1);   //alerta inicial
+					alertas(new TimeSpan(hora2, seg2, 00),2);     //alerta final
 
 
 				}
@@ -174,8 +258,8 @@ namespace Chat
 					seg1 = 59;
 					seg2 = 59;
 
-					alertas(new TimeSpan(hora1, seg1, 00), 1);   //alerta inicial
-					alertas(new TimeSpan(hora2, seg2, 00), 2);      //alerta final
+					alertas(new TimeSpan(hora1, seg1, 00),1);   //alerta inicial
+					alertas(new TimeSpan(hora2, seg2, 00),2);      //alerta final
 
 				}
 
@@ -184,8 +268,8 @@ namespace Chat
 			{
 				seg1 = seg1 - 2;
 				seg2 = seg2 - 2;
-				alertas(new TimeSpan(hora1, seg1, 00), 1);   //alerta inicial
-				alertas(new TimeSpan(hora2, seg2, 00), 2);      //alerta final
+				alertas(new TimeSpan(hora1, seg1, 00),1);   //alerta inicial
+				alertas(new TimeSpan(hora2, seg2, 00),2);      //alerta final
 
 
 
@@ -199,7 +283,7 @@ namespace Chat
 		{
 
 			String line;
-			String[] array = new String[6];
+			String[] array = new String[11];
 			int i = 0;
 
 			//Pass the file path and file name to the StreamReader constructor
@@ -226,8 +310,14 @@ namespace Chat
 			seg1.Text = array[1];
 			hora2.Text = array[2];
 			seg2.Text = array[3];
-			textBox1.Text = array[4];
-			textBox2.Text = array[5];
+			if (array[4] == "true") { checkBox1.Checked = true; }
+			if (array[5] == "true") { checkBox2.Checked = true; }
+			if (array[6] == "true") { checkBox3.Checked = true; }
+			if (array[7] == "true") { checkBox4.Checked = true; }
+			if (array[8] == "true") { checkBox5.Checked = true; }
+			
+			textBox1.Text = array[9];
+			textBox2.Text = array[10];
 			
 
 
@@ -264,6 +354,14 @@ namespace Chat
 
 		}
 
-		
+		private void label6_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void label3_Click(object sender, EventArgs e)
+		{
+
+		}
 	}
 }

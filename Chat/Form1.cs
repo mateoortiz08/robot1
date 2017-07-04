@@ -16,15 +16,14 @@ namespace Chat
 		public Form1()
 		{
 			InitializeComponent();
-			Configuracion vista_confi = Configuracion.getInstancia();
-			vista_confi.Show();
-			vista_confi.Activate();
-			vista_confi.BringToFront();
+			
 
-
+			
 			Configuracion conf = Configuracion.getInstancia();
+			conf.CargarDatos();
 			conf.Obtener();
-			//conf.CargarDatos();
+
+			conf.EjecutarDiario(new TimeSpan(00, 00, 00));
 
 		}
 

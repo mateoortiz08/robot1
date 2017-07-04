@@ -124,5 +124,30 @@ namespace Chat
             sw.Close();
         }
 
+        public static void guardar(List<String> datos)
+        {
+            DateTime fecha = DateTime.Today;
+
+            String date = fecha.ToString().Replace('/', '-');
+            date = date.Replace(' ', '-');
+
+
+            String ruta = "C:\\Users\\Administrator\\Desktop\\conversacion" + date + ".txt";
+
+
+            Console.WriteLine(ruta);
+
+
+            //"C:\\Users\\Administrator\\Desktop\\conversacion" + fecha.ToString() + ".txt"
+
+            StreamWriter sw = new StreamWriter("C:\\Users\\Administrator\\Desktop\\conversacion.txt");
+            datos.ForEach(delegate (String msg)
+            {
+                sw.WriteLine(msg);
+            });
+            //sw.Write(datos);
+            sw.Close();
+        }
+
     }
 }

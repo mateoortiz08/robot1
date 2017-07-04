@@ -346,12 +346,6 @@ namespace Chat
 		private void button2_Click(object sender, EventArgs e)
 		{
             skype.terminarChat();
-
-			
-
-
-
-
 		}
 
 		private void label6_Click(object sender, EventArgs e)

@@ -25,6 +25,7 @@ namespace Chat
         Conversation conversation;
         InstantMessageModality imModality;
         String mensajes = "";
+        List<String> msg;
 
         public SkypeFB()
         {
@@ -47,6 +48,8 @@ namespace Chat
 
             }
 
+
+            msg = new List<String>();
 
         }
 
@@ -142,7 +145,7 @@ namespace Chat
             {
                 
                 conversation.End();
-                Datos.guardar(this.getMensajes());
+                Datos.guardar(msg);
             } catch (Exception e)
             {
                 Console.WriteLine(e.StackTrace);
@@ -157,8 +160,8 @@ namespace Chat
             //Console.WriteLine(user);
             //Console.WriteLine(e.Text);
 
-            mensajes += user + " : " + e.Text+"\n";
-
+            mensajes = user + " : " + e.Text+"\n";
+            msg.Add(mensajes);
 
         }
 

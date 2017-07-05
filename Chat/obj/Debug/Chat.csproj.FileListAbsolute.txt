@@ -44,3 +44,4 @@ C:\Users\mateo.ortiz\Documents\nuevo robot\Chat\obj\Debug\Chat.PruebaSkypeFb.res
 C:\Users\mateo.ortiz\Documents\nuevo robot\Chat\obj\Debug\Chat.csproj.GenerateResource.Cache
 C:\Users\mateo.ortiz\Documents\nuevo robot\Chat\obj\Debug\Chat.exe
 C:\Users\mateo.ortiz\Documents\nuevo robot\Chat\obj\Debug\Chat.pdb
+C:\Users\Administrator\Documents\robot1\Chat\bin\Debug\IrisSkin2.dll

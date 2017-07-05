@@ -126,21 +126,18 @@ namespace Chat
 
         public static void guardar(List<String> datos)
         {
-            DateTime fecha = DateTime.Today;
-
-            String date = fecha.ToString().Replace('/', '-');
-            date = date.Replace(' ', '-');
+        
 
 
-            String ruta = "C:\\Users\\Administrator\\Desktop\\conversacion" + date + ".txt";
-
+            String date = DateTime.Now.ToString("yyyy-dd-M--HH-mm-ss");
+            String ruta = "C:\\Users\\Administrator\\Desktop\\conversaciones\\"+date+".txt";
 
             Console.WriteLine(ruta);
 
 
             //"C:\\Users\\Administrator\\Desktop\\conversacion" + fecha.ToString() + ".txt"
 
-            StreamWriter sw = new StreamWriter("C:\\Users\\Administrator\\Desktop\\conversacion.txt");
+            StreamWriter sw = File.CreateText(ruta);
             datos.ForEach(delegate (String msg)
             {
                 sw.WriteLine(msg);
@@ -149,5 +146,41 @@ namespace Chat
             sw.Close();
         }
 
+
+        public static String[] CargarDatos()
+        {
+            
+            String line;
+            String[] array = new String[11];
+            int i = 0;
+
+            //Pass the file path and file name to the StreamReader constructor
+            //StreamReader sr = new StreamReader("C:\\Users\\Administrator\\Desktop\\datos.txt");
+            StreamReader sr = new StreamReader("C:\\Users\\Administrator\\Desktop\\datos.txt");
+
+
+            //Read the first line of text
+            line = sr.ReadLine();
+
+            //Continue to read until you reach end of file
+            while (line != null)
+            {
+                //write the lie to console window
+                //Console.WriteLine(line);
+                array[i] = line;
+                //Read the next line
+                line = sr.ReadLine();
+                i++;
+            }
+
+            //close the file
+            sr.Close();
+            return array;
+        }
+
     }
+
+
+
+
 }

@@ -35,17 +35,17 @@ namespace Chat
 
         private void btn_login_Click(object sender, EventArgs e)
         {
-            
+            /*
 			login formLogin = new login();
 			formLogin.Show();
 			formLogin.Activate();
 			formLogin.BringToFront();
-            /*
+            */
             PruebaSkypeFb prueba = new PruebaSkypeFb();
             prueba.Show();
             prueba.Activate();
             prueba.BringToFront();
-            */
+            
         }
 
         private void Btn_Configuracion_Click(object sender, EventArgs e)

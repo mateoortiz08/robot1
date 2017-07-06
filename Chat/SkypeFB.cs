@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Chat
@@ -26,6 +27,7 @@ namespace Chat
         InstantMessageModality imModality;
         String mensajes = "";
         List<String> msg;
+        bool eliminar = true;
 
         public SkypeFB()
         {
@@ -62,7 +64,7 @@ namespace Chat
             if (lyncClient != null) {
                 try
                 {
-
+                    eliminar = false;
                     //Obtener lista de invitados
                     List<string> inviteeList = new List<string>();
                     List<String> gruposList;
@@ -78,6 +80,7 @@ namespace Chat
                     inviteeList.ForEach(delegate (String usuario)
                     {
                         conversation.AddParticipant(lyncClient.ContactManager.GetContactByUri("sip:" + usuario));
+                        ///conversation.RemoveParticipant(conversation.)
                     });
                     //conversation.AddParticipant(lyncClient.ContactManager.GetContactByUri("sip:david.penagos@accenture.com"));
                     //conversation.AddParticipant(lyncClient.ContactManager.BeginAddGroup("sip:404",null,null));
@@ -103,9 +106,10 @@ namespace Chat
 
                     //Objeto encargado de enviar los mensajes
                     imModality = conversation.Modalities[ModalityTypes.InstantMessage] as InstantMessageModality;
-                   // imModality.InstantMessageReceived += InstantMessageReceived;
+                    // imModality.InstantMessageReceived += InstantMessageReceived;
 
                     retorno = true;
+
                 } catch (Exception e)
                 {
                     retorno = false;
@@ -140,43 +144,71 @@ namespace Chat
 
         public void terminarChat()
         {
-            Console.WriteLine("Se cierra el chat");
-            try
+            for (int i = 1; i < conversation.Participants.Count; i++)
             {
-                
-                conversation.End();
-                Datos.guardar(msg);
-            } catch (Exception e)
-            {
-                Console.WriteLine(e.StackTrace);
+
+                conversation.RemoveParticipant(conversation.Participants.ElementAt(i));
+
             }
+
+            conversation.BeginSetProperty(
+             ConversationProperty.ConferencingLocked,
+             true, (ar) =>
+             {
+                 conversation.EndSetProperty(ar);
+             },
+             null);
+
+
+            Thread.Sleep(5000);
+
+            conversation.End();
+
+            Datos.guardar(msg);
+
+
 
         }
 
-        
+
         private void InstantMessageReceived(object sender, MessageSentEventArgs e)
         {
             string user = (string)((InstantMessageModality)sender).Participant.Contact.GetContactInformation(ContactInformationType.DisplayName);
             //Console.WriteLine(user);
             //Console.WriteLine(e.Text);
 
-            mensajes = user + " : " + e.Text+"\n";
+            mensajes = user + " : " + e.Text + "\n";
             msg.Add(mensajes);
 
         }
 
         private void ParticipantAdded(object sender, ParticipantCollectionChangedEventArgs e)
         {
-            
+
 
             var instantMessageModality =
                 e.Participant.Modalities[ModalityTypes.InstantMessage] as InstantMessageModality;
             instantMessageModality.InstantMessageReceived += InstantMessageReceived;
+
+            if (eliminar)
+            {
+                eliminarContactos();
+            }
         }
 
         public String getMensajes()
         {
             return mensajes;
+        }
+
+        public void eliminarContactos()
+        {
+            for (int i = 1; i < conversation.Participants.Count; i++)
+            {
+
+                conversation.RemoveParticipant(conversation.Participants.ElementAt(i));
+
+            }
         }
         
     }
